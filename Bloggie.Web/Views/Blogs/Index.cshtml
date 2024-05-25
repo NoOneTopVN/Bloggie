@@ -1,6 +1,5 @@
 ﻿@model Bloggie.Web.Models.Domain.BlogPost
 @{
-    ViewData["Title"] = Model.PageTitle;
 }
 
 <div class="container my-5">
@@ -24,7 +23,7 @@
 
                 <img src="@Model.FeaturedImageUrl" class="d-block img-fluid mb-3" />
 
-                <div class="mb-3 blog-details-content">
+                <div class="mb-3">
                     @Html.Raw(Model.Content)
                 </div>
             }
