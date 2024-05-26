@@ -7,10 +7,13 @@ namespace Bloggie.Web.Controllers
     public class AccountController : Controller
     {
         private readonly UserManager<IdentityUser> userManager;
+        private readonly SignInManager<IdentityUser> signInManager;
 
-        public AccountController(UserManager<IdentityUser> userManager)
+        public AccountController(UserManager<IdentityUser> userManager,
+            SignInManager<IdentityUser> signInManager)
         {
             this.userManager = userManager;
+            this.signInManager = signInManager;
         }
 
         [HttpGet]
@@ -35,7 +38,7 @@ namespace Bloggie.Web.Controllers
                 // assign this user the "User" role
                 var roleIdentityResult = await userManager.AddToRoleAsync(identityUser, "User");
 
-                if(roleIdentityResult.Succeeded)
+                if (roleIdentityResult.Succeeded)
                 {
                     // Show success notification
                     return RedirectToAction("Register");
@@ -43,6 +46,26 @@ namespace Bloggie.Web.Controllers
             }
 
             // Show error notification
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> Login(LoginViewModel loginViewModel)
+        {
+            var signInResult = await signInManager.PasswordSignInAsync(loginViewModel.Username,
+                loginViewModel.Password, false, false);
+
+            if(signInResult != null && signInResult.Succeeded) 
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            // Show errors
             return View();
         }
     }
