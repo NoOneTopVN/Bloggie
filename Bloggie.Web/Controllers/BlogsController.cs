@@ -40,6 +40,7 @@ namespace Bloggie.Web.Controllers
                     UrlHandle = blogPost.UrlHandle,
                     Visible = blogPost.Visible,
                     Tags = blogPost.Tags,
+                    TotalLikes = totalLikes,
                 };
             }
 
