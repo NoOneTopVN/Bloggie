@@ -1,4 +1,5 @@
 ﻿using Bloggie.Web.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -50,11 +51,17 @@ namespace Bloggie.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login()
+        public IActionResult Login(string ReturnUrl)
         {
-            return View();
+            var model = new LoginViewModel
+            {
+                ReturnUrl = ReturnUrl,
+            };
+
+            return View(model);
         }
 
+        [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel loginViewModel)
         {
             var signInResult = await signInManager.PasswordSignInAsync(loginViewModel.Username,
@@ -62,10 +69,28 @@ namespace Bloggie.Web.Controllers
 
             if(signInResult != null && signInResult.Succeeded) 
             {
+                if (!string.IsNullOrWhiteSpace(loginViewModel.ReturnUrl))
+                {
+                    return Redirect(loginViewModel.ReturnUrl);
+                }
+
                 return RedirectToAction("Index", "Home");
             }
 
             // Show errors
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Logout()
+        {
+            await signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet]
+        public IActionResult AccessDenied()
+        {
             return View();
         }
     }
