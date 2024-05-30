@@ -19,6 +19,11 @@ namespace Bloggie.Web.Repositories
             return tag;
         }
 
+        public async Task<int> CountAsync()
+        {
+            return await bloggieDbContext.Tags.CountAsync();    
+        }
+
         public async Task<Tag?> DeleteAsync(Guid id)
         {
             var existingTag = await bloggieDbContext.Tags.FindAsync(id);

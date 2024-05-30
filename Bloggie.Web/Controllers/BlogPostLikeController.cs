@@ -26,10 +26,19 @@ namespace Bloggie.Web.Controllers
                 BlogPostId = addLikeRequest.BlogPostId,
                 UserId = addLikeRequest.UserId,
             };
-            
+
             await blogPostLikeRepository.AddLikeForBlog(model);
 
             return Ok();
+        }
+
+        [HttpGet]
+        [Route("{blogPostId:Guid}/totalLikes")]
+        public async Task<IActionResult> GetTotallikesForBlog([FromRoute] Guid blogPostId)
+        {
+            var totalLikes = await blogPostLikeRepository.GetTotalLikes(blogPostId);
+
+            return Ok(totalLikes);
         }
     }
 }
